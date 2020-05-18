@@ -1,26 +1,29 @@
 import React, { useState, useEffect } from 'react'
 import Header from './components/Header'
 import Filter from './components/Filter'
-import AddNewContact from './components/AddNewContact'
-import Contacts from './components/Contacts'
-import personService from './services/persons'
+import AddNewBlog from './components/AddNewBlog'
+import Blogs from './components/Blogs'
+import blogService from './services/blogs'
 import Notification from './components/Notification'
-import './index.css'
+import './App.css'
 
 const App = () => {
-  const [ persons, setPersons] = useState([]) 
-  const [ newName, setNewName ] = useState('')
-  const [ newNumber, setNewNumber ] = useState('')
-  const [ personsToShow, setPersonsToShow] = useState(persons)
+  const [ blogs, setBlogs] = useState([]) 
+  const [ newTitle, setNewTitle ] = useState('')
+  const [ newAuthor, setNewAuthor ] = useState('')
+  const [ newUrl, setNewUrl ] = useState('')
+  const [ newLike, setNewLike ] = useState('')
+  const [ blogsToShow, setBlogsToShow] = useState(blogs)
   const [ message, setMessage] = useState(null)
   const [ notClass, setNotClass] = useState(null)
 
   useEffect(() => {
-    personService
+    blogService
       .getAll()
-      .then(initialContacts => {
-        setPersons(initialContacts)
-        setPersonsToShow(initialContacts)
+      .then(initialBlogs => {
+        setBlogs(initialBlogs)
+        console.log(initialBlogs)
+        setBlogsToShow(initialBlogs)
       })
       .catch(error => {
         showMessage(`Error caught: ${error}`, 'error')
@@ -31,23 +34,28 @@ const App = () => {
 
   const handleAddClick = (e) => {
     e.preventDefault()
-    if(newName === '') {
-      alert("Input Name")
+    if(newTitle === '') {
+      alert("Input Title")
     }
-    else if (newNumber === '') {
-      alert("Input Number")
+    else if (newAuthor === '') {
+      alert("Input Author")
+    }
+    else if (newUrl === '') {
+      alert("Input Url")
     } else {
       let newObject = {
-        name: newName,
-        number: newNumber
+        title: newTitle,
+        author: newAuthor,
+        url: newUrl,
+        likes: 0
       }
-      if(persons.some(person => person.name === newName)) {
+/*       if(blogs.some(blog => blog.name === newName)) {
         let message = `${newName} is already in the phonebook. Do you want to replace the old number with a new one?`
         if(window.confirm(message)) {
           const per = persons.find(p => p.name === newName)
           const changedContact = { ...per, number: newNumber}
           
-          personService
+          blogService
             .update(per.id, changedContact)
             .then(returnedContact => {
               setPersons(persons.map(person => person.id !== per.id ? person : returnedContact))
@@ -65,45 +73,54 @@ const App = () => {
               
             })
         }
-      } else {
-        console.log('step0');
-        
-        personService
-          .create(newObject)
-          .then(returnedContact => {
-            setPersons(persons.concat(returnedContact))
-            setPersonsToShow(persons.concat(returnedContact))
-            resetForm()
-            showMessage(`Added ${newName}`, 'success')
-          })
-          .catch(error => {
-            console.log(error.response.data)
-            showMessage(`${error.response.data.error}`, 'error')
-          })
-      }
+      } else { */
+      console.log('step0');
+      
+      blogService
+        .create(newObject)
+        .then(returnedBlog => {
+          setBlogs(blogs.concat(returnedBlog))
+          setBlogsToShow(blogs.concat(returnedBlog))
+          resetForm()
+          showMessage(`Added ${newTitle}`, 'success')
+        })
+        .catch(error => {
+          console.log(error.response.data)
+          showMessage(`${error.response.data.error}`, 'error')
+        })
+      //}
     }
   }
 
-  const handleDeleteClick = (id, name) => {
-    let message = `Do you really want to delete ${name}?`
+  const handleDeleteClick = (id, title) => {
+    let message = `Do you really want to delete ${title}?`
     if(window.confirm(message)){
-      personService
-        .deleteContact(id)
+      blogService
+        .deleteBlog(id)
         .then(res => {
-          setPersons(persons.filter(p => p.id !== id))
-          setPersonsToShow(persons.filter(p => p.id !== id))
+          setBlogs(blogs.filter(b => b.id !== id))
+          setBlogsToShow(blogs.filter(b => b.id !== id))
         })
         .catch(error => {
-          showMessage(`${name} has already been removed from the server`, 'error')
+          showMessage(`${title} has already been removed from the server`, 'error')
         })
     }
+  }
+
+  const handleLikeClick = (blog) => {
+    console.log('id', blog.id);
+    console.log('title', blog.title);
+    console.log('likes', blog.likes);
   }
 
   const resetForm = () => {
-    setNewName('')
-    setNewNumber('')
-    document.getElementById('nameInput0').value = ''
-    document.getElementById('numberInput0').value = ''
+    setNewTitle('')
+    setNewAuthor('')
+    setNewUrl('')
+    setNewLike('')
+    document.getElementById('titleInput0').value = ''
+    document.getElementById('authorInput0').value = ''
+    document.getElementById('urlInput0').value = ''
   }
 
   const showMessage = (msg, msgClass) => {
@@ -116,29 +133,35 @@ const App = () => {
   }
 
   const handleFilterOnChange = (e) => {
-    const filtered = persons.filter(person => person.name.toLowerCase().includes(e.target.value.toLowerCase()))
-    setPersonsToShow(filtered)
+    const filtered = blogs.filter(blog => blog.title.toLowerCase().includes(e.target.value.toLowerCase()))
+    setBlogsToShow(filtered)
+    //setBlogs(filtered)
   }
 
-  const handleAddOnChange = (e) => {
-    setNewName(e.target.value)
+  const handleAddTitleOnChange = (e) => {
+    setNewTitle(e.target.value)
   }
 
-  const handleAddNumberOnChange = (e) => {
-    setNewNumber(e.target.value)
+  const handleAddAuthorOnChange = (e) => {
+    setNewAuthor(e.target.value)
+  }
+
+  const handleAddUrlOnChange = (e) => {
+    setNewUrl(e.target.value)
   }
 
   return (
     <div>
-      <Header text={'Phonebook'} />
+      <Header text={'Bloglist'} />
       <Notification message={message} notClassName={notClass} />
       <Filter handleFilterOnChange={handleFilterOnChange} />
-      <AddNewContact 
-        handleAddOnChange={handleAddOnChange} 
-        handleAddNumberOnChange={handleAddNumberOnChange}
+      <AddNewBlog 
+        handleAddTitleOnChange={handleAddTitleOnChange} 
+        handleAddAuthorOnChange={handleAddAuthorOnChange}
+        handleAddUrlOnChange={handleAddUrlOnChange}
         handleAddClick={handleAddClick}
       />
-      <Contacts personsToShow={personsToShow} handleDeleteClick={handleDeleteClick} />
+      <Blogs blogs={blogsToShow} handleDeleteClick={handleDeleteClick} handleLikeClick={handleLikeClick} />
     </div>
   )
 }
