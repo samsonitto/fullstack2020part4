@@ -28,3 +28,29 @@ const returnedObj = {
 }
 
 console.log(returnedObj)
+
+// Most Likes
+
+let a = ''
+let totalLikes = 0
+
+for (var prop in result) {
+  if(Object.prototype.hasOwnProperty.call(result, prop)) {
+    let likes = 0
+    let blogs = result[prop]
+    for (var i = 0; i < blogs.length; i++) {
+      likes += blogs[i].likes
+    }
+    if (likes > totalLikes) {
+      totalLikes = likes
+      a = prop
+    }
+  }
+}
+
+const mostLikesAuthor = {
+  author: a,
+  likes: totalLikes
+}
+
+console.log(mostLikesAuthor)
