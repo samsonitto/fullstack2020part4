@@ -49,31 +49,6 @@ const App = () => {
         url: newUrl,
         likes: 0
       }
-/*       if(blogs.some(blog => blog.name === newName)) {
-        let message = `${newName} is already in the phonebook. Do you want to replace the old number with a new one?`
-        if(window.confirm(message)) {
-          const per = persons.find(p => p.name === newName)
-          const changedContact = { ...per, number: newNumber}
-          
-          blogService
-            .update(per.id, changedContact)
-            .then(returnedContact => {
-              setPersons(persons.map(person => person.id !== per.id ? person : returnedContact))
-              setPersonsToShow(persons.map(person => person.id !== per.id ? person : returnedContact))
-              resetForm()
-              showMessage(`Updated ${newName}`, 'success')
-            })
-            .catch(error => {
-              console.log(error);
-              console.log(per.id);
-              
-              setPersons(persons.filter(p => p.id !== per.id))
-              setPersonsToShow(persons.filter(p => p.id !== per.id))
-              showMessage(`${newName} has already been removed from the server`, 'error')
-              
-            })
-        }
-      } else { */
       console.log('step0');
       
       blogService
