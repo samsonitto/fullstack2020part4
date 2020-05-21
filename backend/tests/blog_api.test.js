@@ -70,8 +70,19 @@ test('checking likes', async () => {
     const newBlog = blogsAtTheEnd.find(b => b.title === 'new blog')
 
     expect(newBlog.likes).toEqual(0)
+})
 
-  
+test('checking likes', async () => {
+  const newObject = {
+    author: "some dude",
+    date: new Date()
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newObject)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
 })
 
 afterAll(() => {
