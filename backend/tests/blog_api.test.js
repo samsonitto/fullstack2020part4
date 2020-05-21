@@ -110,6 +110,30 @@ describe('when there is initially some blogs saved', () => {
     })
   })
   
+  describe('updating the blog', () => {
+    test('a blog can be updated', async () => {
+      const blogsAtStart = await helper.blogsInDb()
+      const blogToUpdate = blogsAtStart[0]
+
+      const updatedBlog = {
+        ...blogToUpdate,
+        title: 'updated blog'
+      }
+  
+      await api
+        .put(`/api/blogs/${blogToUpdate.id}`)
+        .send(updatedBlog)
+        .expect(204)
+  
+      const blogsAtTheEnd = await helper.blogsInDb()
+    
+      const titles = blogsAtTheEnd.map(b => b.title)
+  
+      expect(titles).not.toContain(blogToUpdate.title)
+      expect(titles).toContain(updatedBlog.title)
+    })
+  })
+  
 })
 
 afterAll(() => {

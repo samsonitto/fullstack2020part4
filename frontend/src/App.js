@@ -83,9 +83,17 @@ const App = () => {
   }
 
   const handleLikeClick = (blog) => {
-    console.log('id', blog.id);
-    console.log('title', blog.title);
-    console.log('likes', blog.likes);
+    const updatedObject = {
+      ...blog,
+      likes: blog.likes += 1
+    }
+
+    blogService
+      .update(updatedObject)
+      .then(() => {
+        setBlogs(blogs)
+        showMessage(`You liked ${updatedObject.title}`, 'success')
+      })
   }
 
   const resetForm = () => {
