@@ -8,7 +8,7 @@ const Blog = require('../models/blog')
 
 beforeEach(async () => {
   await Blog.deleteMany({})
-  await Blog.insertMany(helper.initialBlogs)
+  await Blog.insertMany(helper.initialBlogs)  
 })
 
 test('blogs are returned as json', async () => {
@@ -18,10 +18,16 @@ test('blogs are returned as json', async () => {
     .expect('Content-Type', /application\/json/)
 })
 
-test('there are zero notes', async () => {
+test('there are six notes', async () => {
   const response = await api.get('/api/blogs')
 
-  expect(response.body).toHaveLength(0)
+  expect(response.body).toHaveLength(helper.initialBlogs.length)
+})
+
+test('defining id', async () => {
+  const response = await api.get('/api/blogs')
+
+  expect(response.body[0].id).toBeDefined();
 })
 
 afterAll(() => {
