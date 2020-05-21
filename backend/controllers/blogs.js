@@ -22,6 +22,7 @@ blogRouter.post('/', (request, response, next) => {
 
   const blog = new Blog({
     ...body,
+    likes: !body.likes ? 0 : body.likes,
     date: new Date(),
   })
 

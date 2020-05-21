@@ -52,6 +52,28 @@ test('adding new blog', async () => {
   expect(titles).toContain('new blog post')
 })
 
+test('checking likes', async () => {
+  const newObject = {
+    title: "new blog",
+    author: "some dude",
+    url: "https://lol.com",
+    date: new Date()
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newObject)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+    const blogsAtTheEnd = await helper.blogsInDb()
+    const newBlog = blogsAtTheEnd.find(b => b.title === 'new blog')
+
+    expect(newBlog.likes).toEqual(0)
+
+  
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
