@@ -1,4 +1,5 @@
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const initialBlogs = [
   { title: "React patterns", author: "Michael Chan", url: "https://reactpatterns.com/", likes: 7, date: new Date() },
@@ -7,6 +8,12 @@ const initialBlogs = [
   { title: "First class tests", author: "Robert C. Martin", url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll", likes: 10, date: new Date() },
   { title: "TDD harms architecture", author: "Robert C. Martin", url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html", likes: 0, date: new Date() },
   { title: "Type wars", author: "Robert C. Martin", url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html", likes: 2, date: new Date() }
+]
+
+const initialUsers = [
+  { username: 'samson', name: 'Samson Azizyan', passwordHash: '$2b$10$bG7CGo2wzG6uv.s.UbozjeOPJSmZ8DlGBoprBA4z0vsirIdNnxmjS' },
+  { username: 'nipsunapsu', name: 'Niina Mattola', passwordHash: '$2b$10$JKMQCd4Fzvd4TvRCWnjkXuN/hgnPuLiBUP6/HAOQbRQDrjmhgnAyq' },
+  { username: 'maga', name: 'Donald Trump', passwordHash: '$2b$10$hK/P6jRrxplw8GHflryG4eXpBPXR49U3JsO6tUPI4NQb0I5W4H39a' },
 ]
 
 const nonExistingId = async () => {
@@ -23,6 +30,11 @@ const blogsInDb = async () => {
   return blogs.map(blog => blog.toJSON())
 }
 
+const usersInDb = async () => {
+  const users = await User.find({})
+  return users.map(user => user.toJSON())
+}
+
 module.exports = {
-  initialBlogs, nonExistingId, blogsInDb
+  initialBlogs, initialUsers, nonExistingId, blogsInDb, usersInDb
 }

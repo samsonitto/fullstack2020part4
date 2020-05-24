@@ -1,4 +1,5 @@
 const lodash = require('lodash')
+const bcrypt = require('bcrypt')
 
 const blogs = [
   { _id: "5a422a851b54a676234d17f7", title: "React patterns", author: "Michael Chan", url: "https://reactpatterns.com/", likes: 7, __v: 0 },
@@ -54,3 +55,15 @@ const mostLikesAuthor = {
 }
 
 console.log(mostLikesAuthor)
+
+const pw = async () => {
+  let pw1 = await bcrypt.hash('samson', 10)
+  let pw2 = await bcrypt.hash('niina', 10)
+  let pw3 = await bcrypt.hash('donald', 10)
+
+  console.log(pw1)
+  console.log(pw2)
+  console.log(pw3)
+}
+
+pw()
