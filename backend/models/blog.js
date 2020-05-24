@@ -23,6 +23,10 @@ const blogSchema = new mongoose.Schema({
     type: Number,
   },
   date: { type: Date, required: true },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }
 })
 
 blogSchema.plugin(uniqueValidator)
