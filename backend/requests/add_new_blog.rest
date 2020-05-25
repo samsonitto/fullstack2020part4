@@ -2,7 +2,7 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-    "title": "Vammasen Ympärilläni",
+    "title": "Lorppakerho",
     "author": "Niina Mattola",
     "url": "https://codesamson.com",
     "likes": "99",
