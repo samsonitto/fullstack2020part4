@@ -1,8 +1,9 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNhbXNvbiIsImlkIjoiNWVjYTVjNmNjYTMyMTYzMTljYTZiY2U5IiwiaWF0IjoxNTkwMzk2MzgxfQ.yQq-xZVCCpklAUOmnw63F-7o2tJyzhxpGfHwNCAiBSc
 
 {
-    "title": "Lorppakerho",
+    "title": "Tarot Magic",
     "author": "Niina Mattola",
     "url": "https://codesamson.com",
     "likes": "99",
