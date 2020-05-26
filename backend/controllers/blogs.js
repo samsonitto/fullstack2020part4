@@ -3,14 +3,15 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 
+// GET ALL BLOGS
 blogRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
   response.json(blogs.map(u => u.toJSON()))
 })
 
+// ADD NEW BLOG
 blogRouter.post('/', async (request, response) => {
   const { body } = request
-  //const token = getTokenFrom(request)
 
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
   if (!request.token || !decodedToken.id) {
@@ -38,7 +39,25 @@ blogRouter.post('/', async (request, response) => {
   await user.save()
 })
 
+// DELETE BLOG
 blogRouter.delete('/:id', async (request, response) => {
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+
+  if (!request.token || !decodedToken.id) {
+    return response.status(401).json({ error: 'token missing or invalid'})
+  }
+  const blog = await Blog.findById(request.params.id)
+  console.log('request token', request.token)
+  
+  
+  console.log('blog.user:', blog.user.toString())
+  console.log('decodedToken.id:', decodedToken.id)
+  
+
+  if (blog.user.toString() !== decodedToken.id.toString()) {
+    return response.status(401).json({ error: "You don't have permission to delete this blog" })
+  }
+
   await Blog.findByIdAndRemove(request.params.id)
   response.status(204).end()
 })
@@ -47,7 +66,7 @@ blogRouter.put('/:id', async (request, response) => {
   const blog = {
     ...request.body,
     date: new Date()
-  }
+  }  
   
   await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
   response.status(204).end()

@@ -2,11 +2,7 @@ POST http://localhost:3003/api/users
 Content-Type: application/json
 
 {
-    "username": "samson",
-    "name": "Samson Azizyan",
-    "password": "samson",
-    "blogs": [
-      "5ec255c57434248d48bd8a1a",
-      "5ec256fa0cf72c4ad0a3347a"
-    ]
+    "username": "niina",
+    "name": "Niina Mattola",
+    "password": "niina"
 }
