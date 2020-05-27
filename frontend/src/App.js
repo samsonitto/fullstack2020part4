@@ -5,7 +5,10 @@ import AddNewBlog from './components/AddNewBlog'
 import Blogs from './components/Blogs'
 import blogService from './services/blogs'
 import Notification from './components/Notification'
+import loginService from './services/login'
 import './App.css'
+import LoginForm from './components/LoginForm'
+import Button from './components/Button'
 
 const App = () => {
   const [ blogs, setBlogs] = useState([]) 
@@ -16,6 +19,9 @@ const App = () => {
   const [ blogsToShow, setBlogsToShow] = useState(blogs)
   const [ message, setMessage] = useState(null)
   const [ notClass, setNotClass] = useState(null)
+  const [ username, setUsername ] = useState('')
+  const [ password, setPassword ] = useState('')
+  const [ user, setUser ] = useState(null)
 
   useEffect(() => {
     blogService
@@ -30,6 +36,39 @@ const App = () => {
       })
     
   }, [])
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  })
+
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    try {
+      const user = await loginService.login({
+        username, password,
+      })
+
+      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
+
+      blogService.setToken(user.token)
+      setUser(user)
+      setUsername('')
+      setPassword('')
+    } catch (error) {
+      showMessage('wrong credentials', 'error')
+    }
+  }
+
+  const handleLogout = () => {
+    console.log('logging out')
+    setUser(null)
+    window.localStorage.clear()
+  }
   
 
   const handleAddClick = (e) => {
@@ -137,14 +176,28 @@ const App = () => {
     <div>
       <Header text={'Bloglist'} />
       <Notification message={message} notClassName={notClass} />
-      <Filter handleFilterOnChange={handleFilterOnChange} />
-      <AddNewBlog 
-        handleAddTitleOnChange={handleAddTitleOnChange} 
-        handleAddAuthorOnChange={handleAddAuthorOnChange}
-        handleAddUrlOnChange={handleAddUrlOnChange}
-        handleAddClick={handleAddClick}
-      />
-      <Blogs blogs={blogsToShow} handleDeleteClick={handleDeleteClick} handleLikeClick={handleLikeClick} />
+      {user === null ?
+        <LoginForm 
+          handleLogin={handleLogin}
+          username={username}
+          setUsername={setUsername} 
+          password={password}
+          setPassword={setPassword}
+        /> :
+        <div>
+          <p>{user.name} logged in</p><Button text={"logout"} handleClick={handleLogout} />
+          <AddNewBlog 
+            handleAddTitleOnChange={handleAddTitleOnChange} 
+            handleAddAuthorOnChange={handleAddAuthorOnChange}
+            handleAddUrlOnChange={handleAddUrlOnChange}
+            handleAddClick={handleAddClick}
+          />
+          <Filter handleFilterOnChange={handleFilterOnChange} />
+        
+          <Blogs blogs={blogsToShow} handleDeleteClick={handleDeleteClick} handleLikeClick={handleLikeClick} />
+        </div>
+      }
+      
     </div>
   )
 }
