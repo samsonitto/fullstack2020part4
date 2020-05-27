@@ -5,10 +5,12 @@ import AddNewBlog from './components/AddNewBlog'
 import Blogs from './components/Blogs'
 import blogService from './services/blogs'
 import Notification from './components/Notification'
+import Button from './components/Button'
+import LoginForm from './components/LoginForm'
 import loginService from './services/login'
 import './App.css'
-import LoginForm from './components/LoginForm'
-import Button from './components/Button'
+
+
 
 const App = () => {
   const [ blogs, setBlogs] = useState([]) 
@@ -44,7 +46,7 @@ const App = () => {
       setUser(user)
       blogService.setToken(user.token)
     }
-  })
+  }, [])
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -71,16 +73,16 @@ const App = () => {
   }
   
 
-  const handleAddClick = (e) => {
+  const handleAddClick = async (e) => {
     e.preventDefault()
     if(newTitle === '') {
-      alert("Input Title")
+      showMessage('Input title', 'error')
     }
     else if (newAuthor === '') {
-      alert("Input Author")
+      showMessage('Input author', 'error')
     }
     else if (newUrl === '') {
-      alert("Input Url")
+      showMessage('Input url', 'error')
     } else {
       let newObject = {
         title: newTitle,
@@ -89,10 +91,18 @@ const App = () => {
         likes: 0
       }
       console.log('step0');
+
+      const newBlog = await blogService.create(newObject)
+      console.log(newBlog)
       
-      blogService
+      setBlogs(blogs.concat(newBlog.savedBlog))
+      setBlogsToShow(blogs.concat(newBlog.savedBlog))
+      showMessage(`Added ${newTitle}`, 'success')
+/*       blogService
         .create(newObject)
         .then(returnedBlog => {
+          console.log(returnedBlog);
+          
           setBlogs(blogs.concat(returnedBlog))
           setBlogsToShow(blogs.concat(returnedBlog))
           resetForm()
@@ -101,8 +111,7 @@ const App = () => {
         .catch(error => {
           console.log(error.response.data)
           showMessage(`${error.response.data.error}`, 'error')
-        })
-      //}
+        }) */
     }
   }
 
@@ -172,32 +181,36 @@ const App = () => {
     setNewUrl(e.target.value)
   }
 
-  return (
-    <div>
-      <Header text={'Bloglist'} />
-      <Notification message={message} notClassName={notClass} />
-      {user === null ?
+  if (user === null) {
+    return (
+      <div>
+        <Header text={'Bloglist'} />
+        <Notification message={message} notClassName={notClass} />
         <LoginForm 
           handleLogin={handleLogin}
           username={username}
           setUsername={setUsername} 
           password={password}
           setPassword={setPassword}
-        /> :
-        <div>
-          <p>{user.name} logged in</p><Button text={"logout"} handleClick={handleLogout} />
-          <AddNewBlog 
-            handleAddTitleOnChange={handleAddTitleOnChange} 
-            handleAddAuthorOnChange={handleAddAuthorOnChange}
-            handleAddUrlOnChange={handleAddUrlOnChange}
-            handleAddClick={handleAddClick}
-          />
-          <Filter handleFilterOnChange={handleFilterOnChange} />
-        
-          <Blogs blogs={blogsToShow} handleDeleteClick={handleDeleteClick} handleLikeClick={handleLikeClick} />
-        </div>
-      }
-      
+        />
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <Header text={'Bloglist'} />
+      <Notification message={message} notClassName={notClass} />
+      <p>{user.name} logged in</p><Button text={"logout"} handleClick={handleLogout} />
+      <AddNewBlog 
+        handleAddTitleOnChange={handleAddTitleOnChange} 
+        handleAddAuthorOnChange={handleAddAuthorOnChange}
+        handleAddUrlOnChange={handleAddUrlOnChange}
+        handleAddClick={handleAddClick}
+      />
+      <Filter handleFilterOnChange={handleFilterOnChange} />
+    
+      <Blogs blogs={blogsToShow} handleDeleteClick={handleDeleteClick} handleLikeClick={handleLikeClick} />      
     </div>
   )
 }
