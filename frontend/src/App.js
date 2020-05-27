@@ -75,44 +75,33 @@ const App = () => {
 
   const handleAddClick = async (e) => {
     e.preventDefault()
-    if(newTitle === '') {
-      showMessage('Input title', 'error')
-    }
-    else if (newAuthor === '') {
-      showMessage('Input author', 'error')
-    }
-    else if (newUrl === '') {
-      showMessage('Input url', 'error')
-    } else {
-      let newObject = {
-        title: newTitle,
-        author: newAuthor,
-        url: newUrl,
-        likes: 0
+    try {
+      if(newTitle === '') {
+        showMessage('Input title', 'error')
       }
-      console.log('step0');
-
-      const newBlog = await blogService.create(newObject)
-      console.log(newBlog)
-      
-      setBlogs(blogs.concat(newBlog.savedBlog))
-      setBlogsToShow(blogs.concat(newBlog.savedBlog))
-      showMessage(`Added ${newTitle}`, 'success')
-/*       blogService
-        .create(newObject)
-        .then(returnedBlog => {
-          console.log(returnedBlog);
-          
-          setBlogs(blogs.concat(returnedBlog))
-          setBlogsToShow(blogs.concat(returnedBlog))
-          resetForm()
-          showMessage(`Added ${newTitle}`, 'success')
-        })
-        .catch(error => {
-          console.log(error.response.data)
-          showMessage(`${error.response.data.error}`, 'error')
-        }) */
+      else if (newAuthor === '') {
+        showMessage('Input author', 'error')
+      }
+      else if (newUrl === '') {
+        showMessage('Input url', 'error')
+      } else {
+        let newObject = {
+          title: newTitle,
+          author: newAuthor,
+          url: newUrl,
+          likes: 0
+        }
+  
+        const newBlog = await blogService.create(newObject)
+        setBlogs(blogs.concat(newBlog.savedBlog))
+        setBlogsToShow(blogs.concat(newBlog.savedBlog))
+        showMessage(`Added ${newTitle}`, 'success')
+        resetForm()
+      }
+    } catch (error) {
+      showMessage(error, 'error')
     }
+
   }
 
   const handleDeleteClick = (id, title) => {
