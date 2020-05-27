@@ -3,8 +3,19 @@ const supertest = require('supertest')
 const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
+const jwt = require('jsonwebtoken')
 
 const Blog = require('../models/blog')
+
+jest.useFakeTimers()
+
+const getTokenFrom = request => {
+  const authorization = request.get('authorization')
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    return authorization.substring(7)
+  }
+  return null
+}
 
 describe('when there is initially some blogs saved', () => {
 
@@ -35,18 +46,22 @@ describe('when there is initially some blogs saved', () => {
   })
   
   describe('addition of new blog', () => {
-    test('adding new blog', async () => {
+    test.only('adding new blog', async () => {
       const newObject = {
         title: "new blog post",
         author: "some dude",
         url: "https://lol.com",
         likes: 199,
-        date: new Date()
+        date: new Date(),
+        userId: "5eccd75d8ae5fb892c9ffd05"
       }
-  
+
+      const token = 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5paW5hIiwiaWQiOiI1ZWNiOGZjZDc5MTdhYjgyNTRmZDA1NTAiLCJpYXQiOjE1OTAzOTk0ODZ9.mAJeMS3HM4zkw7dXmUh-UGLub4mzzXx60-5UneQ-hFM'
+        
       await api
         .post('/api/blogs')
         .send(newObject)
+        .set('Authorization', token)
         .expect(201)
         .expect('Content-Type', /application\/json/)
   
@@ -55,7 +70,7 @@ describe('when there is initially some blogs saved', () => {
   
       const titles = blogsAtTheEnd.map(b => b.title)
       expect(titles).toContain('new blog post')
-    })
+    }, 30000)
   
     test('checking likes', async () => {
       const newObject = {
@@ -64,6 +79,7 @@ describe('when there is initially some blogs saved', () => {
         url: "https://lol.com",
         date: new Date()
       }
+
   
       await api
         .post('/api/blogs')
