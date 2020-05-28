@@ -69,7 +69,9 @@ blogRouter.put('/:id', async (request, response) => {
   const blog = {
     ...request.body,
     date: new Date()
-  }  
+  }
+
+  console.log('editedBlog', blog)
   
   await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
   response.status(204).end()

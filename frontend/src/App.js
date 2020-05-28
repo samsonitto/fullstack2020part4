@@ -9,6 +9,7 @@ import Button from './components/Button'
 import LoginForm from './components/LoginForm'
 import loginService from './services/login'
 import './App.css'
+import Togglable from './components/Togglable'
 
 
 
@@ -91,7 +92,8 @@ const App = () => {
           url: newUrl,
           likes: 0
         }
-  
+        
+        blogFormRef.current.toggleVisibility()
         const newBlog = await blogService.create(newObject)
         setBlogs(blogs.concat(newBlog.savedBlog))
         setBlogsToShow(blogs.concat(newBlog.savedBlog))
@@ -170,18 +172,22 @@ const App = () => {
     setNewUrl(e.target.value)
   }
 
+  const blogFormRef = React.createRef()
+
   if (user === null) {
     return (
       <div>
         <Header text={'Bloglist'} />
         <Notification message={message} notClassName={notClass} />
-        <LoginForm 
-          handleLogin={handleLogin}
-          username={username}
-          setUsername={setUsername} 
-          password={password}
-          setPassword={setPassword}
-        />
+        <Togglable buttonLabel={'Login'}>
+          <LoginForm 
+            handleLogin={handleLogin}
+            username={username}
+            setUsername={setUsername} 
+            password={password}
+            setPassword={setPassword}
+          />
+        </Togglable>
       </div>
     )
   }
@@ -191,12 +197,14 @@ const App = () => {
       <Header text={'Bloglist'} />
       <Notification message={message} notClassName={notClass} />
       <p>{user.name} logged in</p><Button text={"logout"} handleClick={handleLogout} />
-      <AddNewBlog 
-        handleAddTitleOnChange={handleAddTitleOnChange} 
-        handleAddAuthorOnChange={handleAddAuthorOnChange}
-        handleAddUrlOnChange={handleAddUrlOnChange}
-        handleAddClick={handleAddClick}
-      />
+      <Togglable buttonLabel={'New Blog'} ref={blogFormRef}>
+        <AddNewBlog 
+          handleAddTitleOnChange={handleAddTitleOnChange} 
+          handleAddAuthorOnChange={handleAddAuthorOnChange}
+          handleAddUrlOnChange={handleAddUrlOnChange}
+          handleAddClick={handleAddClick}
+        />
+      </Togglable>
       <Filter handleFilterOnChange={handleFilterOnChange} />
     
       <Blogs blogs={blogsToShow} handleDeleteClick={handleDeleteClick} handleLikeClick={handleLikeClick} />      
