@@ -14,10 +14,7 @@ import Togglable from './components/Togglable'
 
 
 const App = () => {
-  const [ blogs, setBlogs] = useState([]) 
-  const [ newTitle, setNewTitle ] = useState('')
-  const [ newAuthor, setNewAuthor ] = useState('')
-  const [ newUrl, setNewUrl ] = useState('')
+  const [ blogs, setBlogs] = useState([])
   const [ newLike, setNewLike ] = useState('')
   const [ blogsToShow, setBlogsToShow] = useState(blogs)
   const [ message, setMessage] = useState(null)
@@ -74,32 +71,15 @@ const App = () => {
   }
   
 
-  const handleAddClick = async (e) => {
-    e.preventDefault()
+  const handleAddClick = async (blogObject) => {
     try {
-      if(newTitle === '') {
-        showMessage('Input title', 'error')
-      }
-      else if (newAuthor === '') {
-        showMessage('Input author', 'error')
-      }
-      else if (newUrl === '') {
-        showMessage('Input url', 'error')
-      } else {
-        let newObject = {
-          title: newTitle,
-          author: newAuthor,
-          url: newUrl,
-          likes: 0
-        }
-        
-        blogFormRef.current.toggleVisibility()
-        const newBlog = await blogService.create(newObject)
-        setBlogs(blogs.concat(newBlog.savedBlog))
-        setBlogsToShow(blogs.concat(newBlog.savedBlog))
-        showMessage(`Added ${newTitle}`, 'success')
-        resetForm()
-      }
+      blogFormRef.current.toggleVisibility()
+      const newBlog = await blogService.create(blogObject)
+      setBlogs(blogs.concat(newBlog.savedBlog))
+      setBlogsToShow(blogs.concat(newBlog.savedBlog))
+      showMessage(`Added ${newBlog.savedBlog.title}`, 'success')
+      resetForm()
+      
     } catch (error) {
       showMessage(error, 'error')
     }
@@ -157,19 +137,6 @@ const App = () => {
   const handleFilterOnChange = (e) => {
     const filtered = blogs.filter(blog => blog.title.toLowerCase().includes(e.target.value.toLowerCase()))
     setBlogsToShow(filtered)
-    //setBlogs(filtered)
-  }
-
-  const handleAddTitleOnChange = (e) => {
-    setNewTitle(e.target.value)
-  }
-
-  const handleAddAuthorOnChange = (e) => {
-    setNewAuthor(e.target.value)
-  }
-
-  const handleAddUrlOnChange = (e) => {
-    setNewUrl(e.target.value)
   }
 
   const blogFormRef = React.createRef()
@@ -199,10 +166,8 @@ const App = () => {
       <p>{user.name} logged in</p><Button text={"logout"} handleClick={handleLogout} />
       <Togglable buttonLabel={'New Blog'} ref={blogFormRef}>
         <AddNewBlog 
-          handleAddTitleOnChange={handleAddTitleOnChange} 
-          handleAddAuthorOnChange={handleAddAuthorOnChange}
-          handleAddUrlOnChange={handleAddUrlOnChange}
-          handleAddClick={handleAddClick}
+          createBlog={handleAddClick}
+          showMessage={showMessage}
         />
       </Togglable>
       <Filter handleFilterOnChange={handleFilterOnChange} />
