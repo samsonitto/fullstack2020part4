@@ -16,7 +16,7 @@ import Togglable from './components/Togglable'
 const App = () => {
   const [ blogs, setBlogs] = useState([])
   const [ newLike, setNewLike ] = useState('')
-  const [ blogsToShow, setBlogsToShow] = useState(blogs)
+  const [ blogsToShow, setBlogsToShow] = useState(blogs.sort((a, b) => (a.likes < b.likes ? 1 : -1)))
   const [ message, setMessage] = useState(null)
   const [ notClass, setNotClass] = useState(null)
   const [ username, setUsername ] = useState('')
