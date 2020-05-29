@@ -43,6 +43,8 @@ const App = () => {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
+      console.log(user)
+      
     }
   }, [])
 
@@ -110,7 +112,7 @@ const App = () => {
       author: blog.author,
       url: blog.url,
       likes: blog.likes += 1,
-      user: blog.user.id,
+      user: blog.user ? blog.user.id : undefined,
     }    
 
     blogService
@@ -178,7 +180,7 @@ const App = () => {
       </Togglable>
       <Filter handleFilterOnChange={handleFilterOnChange} />
     
-      <Blogs blogs={blogsToShow} handleDeleteClick={handleDeleteClick} handleLikeClick={handleLikeClick} />      
+      <Blogs blogs={blogsToShow} handleDeleteClick={handleDeleteClick} handleLikeClick={handleLikeClick} user={user} />      
     </div>
   )
 }
