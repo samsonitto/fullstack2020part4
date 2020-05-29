@@ -86,29 +86,35 @@ const App = () => {
 
   }
 
-  const handleDeleteClick = (id, title) => {
+  const handleDeleteClick = async (id, title) => {
     let message = `Do you really want to delete ${title}?`
     if(window.confirm(message)){
-      blogService
-        .deleteBlog(id)
-        .then(res => {
-          setBlogs(blogs.filter(b => b.id !== id))
-          setBlogsToShow(blogs.filter(b => b.id !== id))
-        })
-        .catch(error => {
-          showMessage(`${title} has already been removed from the server`, 'error')
-        })
+      try {
+        const deletedBlog = await blogService.deleteBlog(id)
+        
+        setBlogs(blogs.filter(b => b.id !== id))
+        setBlogsToShow(blogs.filter(b => b.id !== id))
+        showMessage(`The "${title}" blog has beed deleted`, 'neutral')
+      } catch (error) {
+        showMessage(error, 'error')
+      }
     }
   }
 
   const handleLikeClick = (blog) => {
+
+    console.log(blog)
+    
     const updatedObject = {
-      ...blog,
-      likes: blog.likes += 1
-    }
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      likes: blog.likes += 1,
+      user: blog.user.id,
+    }    
 
     blogService
-      .update(updatedObject)
+      .update(updatedObject, blog.id)
       .then(() => {
         setBlogs(blogs)
         showMessage(`You liked ${updatedObject.title}`, 'success')

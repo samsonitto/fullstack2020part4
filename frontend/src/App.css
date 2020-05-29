@@ -21,3 +21,13 @@ table, th, td {
   padding: 10px;
   margin-bottom: 10px;
 }
+
+.neutral {
+  color: darkblue;
+  background: lightblue;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
