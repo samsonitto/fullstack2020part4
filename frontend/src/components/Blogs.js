@@ -1,6 +1,7 @@
 import React from 'react';
 import Header2 from './Header2';
 import Button from './Button';
+import Togglable from './Togglable';
 
 const Blogs = (props) => {
     return (
@@ -10,24 +11,29 @@ const Blogs = (props) => {
             <thead>
               <tr>
                 <th>Title</th>
-                <th>Author</th>
-                <th>URL</th>
-                <th>Likes</th>
-                <th>Like</th>
-                <th>Delete</th>
+                <th>Info</th>
               </tr>
             </thead>
             <tbody>
               {props.blogs.map((blog, i) => 
-                <tr id={blog.id} key={blog.id}>
-                  <td>{blog.title}</td>
-                  <td>{blog.author}</td>
-                  <td>{blog.url}</td>
-                  <td>{blog.likes}</td>
-                  <td><Button text='like' handleClick={() => props.handleLikeClick(blog)} /></td>
-                  <td><Button text='delete' handleClick={() => props.handleDeleteClick(blog.id, blog.title)} /></td>
-                </tr>
-            )}
+                <>
+                  <tr id={blog.id} key={blog.id}>
+                    <td>{blog.title}</td>
+                    <td>
+                      <Togglable buttonLabel={'View'} buttonHideLabel={'Hide Info'}>
+                        <div>
+                          <p>Author: {blog.author}</p>
+                          <p>URL: {blog.url}</p>
+                          <p>Likes: {blog.likes} <Button text='like' handleClick={() => props.handleLikeClick(blog)} /></p>
+                          <p>Added by: {blog.user ? blog.user.name : ''}</p>
+                          <Button text='Delete Blog' handleClick={() => props.handleDeleteClick(blog.id, blog.title)} />
+                        </div>
+                      </Togglable>
+                    </td>
+                  </tr>
+                  
+                </>
+              )}
             </tbody>
             
           </table>

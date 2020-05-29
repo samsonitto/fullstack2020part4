@@ -113,12 +113,12 @@ const App = () => {
         setBlogs(blogs)
         showMessage(`You liked ${updatedObject.title}`, 'success')
       })
+      .catch(error => {
+        showMessage(error, 'error')
+      })
   }
 
   const resetForm = () => {
-    setNewTitle('')
-    setNewAuthor('')
-    setNewUrl('')
     setNewLike('')
     document.getElementById('titleInput0').value = ''
     document.getElementById('authorInput0').value = ''
@@ -146,7 +146,7 @@ const App = () => {
       <div>
         <Header text={'Bloglist'} />
         <Notification message={message} notClassName={notClass} />
-        <Togglable buttonLabel={'Login'}>
+        <Togglable buttonLabel={'Login'} buttonHideLabel={'Cancel'}>
           <LoginForm 
             handleLogin={handleLogin}
             username={username}
@@ -164,7 +164,7 @@ const App = () => {
       <Header text={'Bloglist'} />
       <Notification message={message} notClassName={notClass} />
       <p>{user.name} logged in</p><Button text={"logout"} handleClick={handleLogout} />
-      <Togglable buttonLabel={'New Blog'} ref={blogFormRef}>
+      <Togglable buttonLabel={'New Blog'} ref={blogFormRef} buttonHideLabel={'Cancel'}>
         <AddNewBlog 
           createBlog={handleAddClick}
           showMessage={showMessage}
