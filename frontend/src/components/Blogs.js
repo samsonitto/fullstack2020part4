@@ -2,6 +2,7 @@ import React from 'react';
 import Header2 from './Header2';
 import Button from './Button';
 import Togglable from './Togglable';
+import Blog from './Blog';
 
 const Blogs = (props) => {
     return (
@@ -11,27 +12,14 @@ const Blogs = (props) => {
             <thead>
               <tr>
                 <th>Title</th>
+                <th>Author</th>
                 <th>Info</th>
               </tr>
             </thead>
             <tbody>
               {props.blogs.map((blog, i) => 
                 <>
-                  <tr id={blog.id} key={blog.id}>
-                    <td>{blog.title}</td>
-                    <td>
-                      <Togglable buttonLabel={'View'} buttonHideLabel={'Hide Info'}>
-                        <div>
-                          <p>Author: {blog.author}</p>
-                          <p>URL: {blog.url}</p>
-                          <p>Likes: {blog.likes} <Button text='like' handleClick={() => props.handleLikeClick(blog)} /></p>
-                          {blog.user ? <p>Added by: {blog.user.name}</p> : ''}
-                          {blog.user ? (props.user.username === blog.user.username ? <Button text='Delete Blog' handleClick={() => props.handleDeleteClick(blog.id, blog.title)} /> : '') : ''}
-                        </div>
-                      </Togglable>
-                    </td>
-                  </tr>
-                  
+                  <Blog blog={blog} user={props.user} handleLikeClick={props.handleLikeClick} handleDeleteClick={props.handleDeleteClick} />
                 </>
               )}
             </tbody>
