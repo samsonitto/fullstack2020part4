@@ -54,3 +54,17 @@ test('renders hidden content', () => {
   )
   expect(div).not.toHaveStyle('display: none')
 })
+
+test('clicking the button twice calls the event twice', () => {
+  const mockHandler = jest.fn()
+
+  const component = render(
+    <Blog blog={blog} handleLikeClick={mockHandler} />
+  )
+
+  const button = component.getByText('like')
+  fireEvent.click(button)
+  fireEvent.click(button)
+
+  expect(mockHandler.mock.calls).toHaveLength(2)
+})
