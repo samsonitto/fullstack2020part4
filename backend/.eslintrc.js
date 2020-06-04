@@ -3,7 +3,8 @@ module.exports = {
         "browser": true,
         "es6": true,
         "node": true,
-        "jest": true
+        "jest": true,
+        "cypress/globals": true
     },
     "extends": "airbnb",
 	'globals': {
@@ -17,7 +18,7 @@ module.exports = {
         "ecmaVersion": 11
     },
     "plugins": [
-        "react"
+        "react", "jest", "cypress"
     ],
     "rules": {
         'linebreak-style': [
