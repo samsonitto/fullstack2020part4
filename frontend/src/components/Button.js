@@ -5,6 +5,7 @@ const Button = (props) => {
         <button 
             onClick={props.handleClick}
             type={props.type}
+            id={props.id}
         >
             {props.text}
         </button>
