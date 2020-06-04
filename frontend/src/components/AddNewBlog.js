@@ -52,7 +52,7 @@ const AddNewBlog = ({ createBlog, showMessage }) => {
                     Url: <Input placeholder={'Url..'} handleOnChange={handleAddUrlOnChange} id={'urlInput0'} />
                 </div>
                 <div>
-                    <Button type={'submit'} handleClick={addBlog} text={'Add'} />
+                    <Button type={'submit'} handleClick={addBlog} text={'Add'} id='addNewBlogButton' />
                 </div>
             </form>
         </>

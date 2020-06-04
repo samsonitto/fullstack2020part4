@@ -20,12 +20,22 @@ blogRouter.get('/:id', async (request, response) => {
 blogRouter.post('/', async (request, response) => {
   const { body } = request
 
+  console.log(body)
+  
+
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  console.log('token', request.token);
+  
   if (!request.token || !decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid'})
   }
 
+  console.log('decoded token id', decodedToken.id);
+  
+
   const user = await User.findById(decodedToken.id)
+  console.log('user', user);
+  
 
   if (!body.title || !body.author || !body.url) {
     return response.status(400).json({
