@@ -2,7 +2,6 @@ module.exports = {
   "env": {
       "browser": true,
       "es6": true,
-      "cypress/globals": true
   },
   "extends": "airbnb",
 'globals': {

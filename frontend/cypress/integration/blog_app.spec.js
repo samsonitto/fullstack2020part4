@@ -36,7 +36,7 @@ describe('Blog app', function () {
     cy.get('.error').should('have.css', 'color', 'rgb(255, 0, 0)')
   })
 
-  describe.only('When loggend in', function() {
+  describe('When loggend in', function() {
     beforeEach(function() {
       cy.login({ username: 'samson', password: 'samson' })
     })
@@ -49,6 +49,21 @@ describe('Blog app', function () {
       cy.get('#addNewBlogButton').click()
 
       cy.contains('new blog')
+    })
+  })
+
+  describe.only('Interaction with blogs', function() {
+    beforeEach(function() {
+      cy.login({ username: 'samson', password: 'samson' })
+      cy.createB({ title: 'new blog', author: 'some dude', url: 'https://new.com' })
+    })
+
+    it('A blog can be liked', function() {
+      cy.contains('new blog')
+      cy.contains('View').click()
+      cy.contains('like').click()
+
+      cy.contains('Likes: 1')
     })
   })
 })
