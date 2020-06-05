@@ -65,5 +65,14 @@ describe('Blog app', function () {
 
       cy.contains('Likes: 1')
     })
+
+    it('A blog can be deleted', function() {
+      cy.contains('new blog')
+      cy.contains('View').click()
+      cy.contains('Delete Blog').click()
+
+      !cy.contains('new blog')
+      cy.contains('The "new blog" blog has beed deleted')
+    })
   })
 })
