@@ -52,7 +52,7 @@ describe('Blog app', function () {
     })
   })
 
-  describe.only('Interaction with blogs', function() {
+  describe('Interaction with blogs', function() {
     beforeEach(function() {
       cy.login({ username: 'samson', password: 'samson' })
       cy.createB({ title: 'new blog', author: 'some dude', url: 'https://new.com' })
@@ -75,4 +75,20 @@ describe('Blog app', function () {
       cy.contains('The "new blog" blog has beed deleted')
     })
   })
+
+  describe.only('Blog list', function() {
+    beforeEach(function() {
+      cy.login({ username: 'samson', password: 'samson' })
+      cy.createB({ title: 'new blog', author: 'some dude', url: 'https://new.com' })
+      cy.createB({ title: 'new blog 1', author: 'some girl', url: 'https://new.com', likes: 2 })
+      cy.createB({ title: 'new blog 2', author: 'something', url: 'https://new.com', likes: 3 })
+    })
+
+    it('Blogs should ordered by likes', function() {
+      cy.get('#row0').contains('new blog 2')
+      cy.get('#row1').contains('new blog 1')
+      cy.get('#row2').contains('new blog')
+    })
+  })
+
 })

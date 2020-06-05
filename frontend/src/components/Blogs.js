@@ -19,7 +19,7 @@ const Blogs = (props) => {
             <tbody>
               {props.blogs.map((blog, i) => 
                 <>
-                  <Blog blog={blog} user={props.user} handleLikeClick={props.handleLikeClick} handleDeleteClick={props.handleDeleteClick} />
+                  <Blog blog={blog} user={props.user} handleLikeClick={props.handleLikeClick} handleDeleteClick={props.handleDeleteClick} rowIndex={`row${i}`} />
                 </>
               )}
             </tbody>
