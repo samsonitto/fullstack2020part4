@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import Togglable from './Togglable'
 import Button from './Button'
 
-const Blog = ({ blog, user, handleLikeClick, handleDeleteClick, rowIndex }) => {
+const Blog = ({ blog, user, handleLikeClick, handleDeleteClick }) => {
   return (
-    <tr id={rowIndex} key={blog.id} className='blog'>
+    <tr id={blog.id} key={blog.id} className='blog'>
       <td>{blog.title}</td>
       <td>{blog.author}</td>
       <td>
